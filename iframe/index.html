@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFrame</title>
+    <style>
+        #logs div {
+            border-bottom: 0.1em solid red;
+        }
+    </style>
+</head>
+<body>
+    <h2 id="title">IFrame site</h2>
+    
+    <input type="text" id="messageTxt" placeholder="Message to parent">
+    <button id="sendBtn">Send to parent</button>
+
+    <div id="logs"></div>
+
+    <script>
+        (function () {
+            title.textContent += ` ${location}`;
+            
+            const parentDomain = "http://localhost:8080";
+
+            window.onmessage = event => {
+                if(event.origin === parentDomain) {
+                    const message = document.createElement("div");
+                    message.textContent = event.data;
+
+                    logs.appendChild(message);
+                }
+            };
+
+            sendBtn.onclick = event => {
+                window.parent.postMessage(messageTxt.value, parentDomain);
+            }
+        })();
+    </script>
+</body>
+</html>

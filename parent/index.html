@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent site</title>
+    <style>
+        iframe {
+            border: 1em solid red;
+            height: 20em;
+        }
+        #logs div {
+            border-bottom: 0.1em solid red;
+        }
+        #logs {
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="title">Parent site</h1>
+
+    <div style="margin-bottom: 1em;">
+        <input type="text" id="messageTxt" placeholder="Send to IFrame">
+        <button id="sendBtn">Send to IFrame</button>
+    </div>
+
+    <div id="logs"></div>
+
+    <iframe src="http://localhost:9090" id="targetIFrame"></iframe>
+
+    <script>
+        (function() {
+            title.textContent += ` ${location}`;
+            
+            const iframeDomain = "http://localhost:9090";
+    
+            window.onmessage = event => {
+                if(event.origin === iframeDomain) {
+                    const message = document.createElement("div");
+                    message.textContent = event.data;
+    
+                    logs.appendChild(message);
+                }
+            };
+    
+            sendBtn.onclick = event => {
+                targetIFrame.contentWindow.postMessage(messageTxt.value, iframeDomain);
+            }
+        })();
+    </script>
+</body>
+</html>
